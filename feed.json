@@ -1,9 +1,9 @@
 {
-  "title": "My PSX Collection",
+  "title": "My Games",
   "props": {
     "psx_bios": [
-      "scph5500.bin",
-      "scph5501.bin"
+      "../scph5500.bin",
+      "../scph5501.bin"
     ]
   },
   "items": [
