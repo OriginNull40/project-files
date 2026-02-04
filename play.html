@@ -8,14 +8,6 @@
     </style>
 </head>
 <body>
-    <script>
-        // This finds your repo name automatically so we don't have to type it
-        const path = window.location.pathname.split('/')[1];
-        const feed = "https://OriginNull40.github.io/" + path + "/feed.json";
-        const engine = "https://webrcade.github.io/webrcade-app-common/player/index.html?feed=" + encodeURIComponent(feed);
-        
-        // This builds the window
-        document.write('<iframe src="' + engine + '" style="width:100%; height:100vh; border:none;"></iframe>');
-    </script>
+    <iframe src="https://webrcade.github.io/webrcade-app-common/player/index.html?feed=https://OriginNull40.github.io/project-files/feed.json"></iframe>
 </body>
 </html>
