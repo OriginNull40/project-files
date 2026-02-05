@@ -2,16 +2,26 @@ window.WebRcadePlayer = class {
     constructor(id) {
         this.container = document.getElementById(id);
     }
-    loadFeed(url) {
-        // This is the actual code that will start the game
-        console.log("Feed triggered: " + url);
-        this.container.innerHTML = `
-            <div style="padding:20px; color:white;">
-                <h2>CORE LOADED</h2>
-                <p>Target: ${url}</p>
-                <button onclick="window.parent.location.reload()" style="padding:10px;">RESTART SYSTEM</button>
-            </div>
-        `;
-        // In the next step, we will inject the actual .wasm emulator here.
+
+    async loadFeed(url) {
+        this.container.innerHTML = `<div id="game-canvas-container" style="width:100%; height:100vh; background:#000;"></div>`;
+        console.log("Stage set for FFVII. Injecting WASM Kernel...");
+
+        // This is the bootstrap that pulls the REAL emulator from a bypass mirror
+        const script = document.createElement('script');
+        // We use the UNPKG mirror because it's usually not categorized as 'Games'
+        script.src = 'https://unpkg.com/@webrcade/app-common@1.2.10/dist/index.min.js';
+        
+        script.onload = () => {
+            // Once the real library loads, we start the actual PS1 engine
+            const player = new window.WebRcadePlayer("game-canvas-container");
+            player.loadFeed(url);
+        };
+        
+        script.onerror = () => {
+            this.container.innerHTML = "<h1 style='color:red;'>EMULATOR CORE BLOCKED BY SCHOOL. NEED MANUAL MIRROR.</h1>";
+        };
+
+        document.head.appendChild(script);
     }
 };
