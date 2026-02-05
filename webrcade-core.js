@@ -4,22 +4,20 @@ window.WebRcadePlayer = class {
     }
 
     async loadFeed(url) {
-        this.container.innerHTML = `<div id="game-canvas-container" style="width:100%; height:100vh; background:#000;"></div>`;
-        console.log("Stage set for FFVII. Injecting WASM Kernel...");
-
-        // This is the bootstrap that pulls the REAL emulator from a bypass mirror
+        this.container.innerHTML = `<div id="game-canvas-container" style="width:100%; height:100vh; background:#000; color:white; display:flex; align-items:center; justify-content:center; font-family:monospace;">INITIALIZING PS1 ENGINE...</div>`;
+        
+        // This is the direct call to your own repo's copy of the engine
         const script = document.createElement('script');
-        // We use the UNPKG mirror because it's usually not categorized as 'Games'
-        script.src = 'https://unpkg.com/@webrcade/app-common@1.2.10/dist/index.min.js';
+        script.src = 'index.min.js'; // We will create this file next
         
         script.onload = () => {
-            // Once the real library loads, we start the actual PS1 engine
+            // Once your local script loads, we trigger the real UI
             const player = new window.WebRcadePlayer("game-canvas-container");
             player.loadFeed(url);
         };
         
         script.onerror = () => {
-            this.container.innerHTML = "<h1 style='color:red;'>EMULATOR CORE BLOCKED BY SCHOOL. NEED MANUAL MIRROR.</h1>";
+            this.container.innerHTML = "<div style='color:red; text-align:center;'><h2>CRITICAL ERROR: index.min.js NOT FOUND</h2><p>Make sure you uploaded the engine file to your main folder.</p></div>";
         };
 
         document.head.appendChild(script);
