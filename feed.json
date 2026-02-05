@@ -1,5 +1,5 @@
 {
-  "title": "Archive",
+  "title": "Cloud's Storage",
   "categories": [
     {
       "title": "PlayStation",
@@ -9,7 +9,7 @@
           "type": "psx",
           "props": {
             "discs": [
-              "https://archive.org/download/psx_final_fantasy_vii/Final%20Fantasy%20VII%20%28USA%29%20%28Disc%201%29.chd"
+              "YOUR_FF7_LINK_HERE"
             ]
           }
         }
@@ -18,8 +18,7 @@
   ],
   "props": {
     "psx_bios": [
-      "https://OriginNull40.github.io/project-files/scph5501.txt",
-      "https://OriginNull40.github.io/project-files/scph5500.txt"
+      "https://OriginNull40.github.io/project-files/scph5501.txt"
     ]
   }
 }
