@@ -1,16 +1,12 @@
 async function boot() {
-    console.log("Attempting to load local engine...");
-    try {
-        const script = document.createElement('script');
-        // This MUST match the filename you created in GitHub
-        script.src = 'webrcade-core.js'; 
-        script.onload = () => {
-            console.log("Local script loaded successfully!");
-            window.engineLoaded = true;
-        };
-        document.head.appendChild(script);
-    } catch (e) {
-        console.error("Engine failed to load locally.");
-    }
+    console.log("Booting local engine...");
+    const script = document.createElement('script');
+    // This tells the browser to look in your GitHub folder for the core
+    script.src = 'webrcade-core.js'; 
+    script.onload = () => {
+        window.engineLoaded = true;
+        console.log("Core script attached.");
+    };
+    document.head.appendChild(script);
 }
 boot();
