@@ -1,18 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head><title>System</title></head>
-<body style="margin:0; background:#000;">
+<head>
+    <title>System Boot</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; color: #0f0; font-family: monospace; }
+        #status { position: absolute; bottom: 10px; left: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div id="status">INITIATING...</div>
     <div id="app-root"></div>
+
     <script src="engine.js"></script>
+
     <script>
-        // Wait a few seconds for the 'machine' to download
-        setTimeout(() => {
+        let attempts = 0;
+        const checkEngine = setInterval(() => {
+            attempts++;
+            document.getElementById('status').innerHTML = "BOOT ATTEMPT: " + attempts + "/10";
+
             if (typeof WebRcadePlayer !== 'undefined') {
-                new WebRcadePlayer("app-root").loadFeed("feed.json");
-            } else {
-                alert("The school filter is too strong. We need the Google Doc trick.");
+                clearInterval(checkEngine);
+                document.getElementById('status').innerHTML = "ENGINE FOUND! LOADING GAMES...";
+                const player = new WebRcadePlayer("app-root");
+                player.loadFeed("feed.json");
+                
+                // Hide status after success
+                setTimeout(() => { document.getElementById('status').style.display='none'; }, 3000);
             }
-        }, 3000);
+
+            if (attempts >= 10) {
+                clearInterval(checkEngine);
+                document.getElementById('status').innerHTML = "FATAL ERROR: Engine Blocked by School Filter.";
+                document.getElementById('status').style.color = "red";
+            }
+        }, 1000); // Checks every second for 10 seconds
     </script>
 </body>
 </html>
