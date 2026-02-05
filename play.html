@@ -1,50 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Console</title>
+    <title>Booting...</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #000; color: #0f0; font-family: monospace; }
-        #debug-log { position: absolute; top: 10px; left: 10px; z-index: 100; font-size: 14px; pointer-events: none; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; color: #0f0; font-family: monospace; }
+        #status { position: absolute; top: 20px; left: 20px; font-size: 16px; }
     </style>
 </head>
 <body>
-    <div id="debug-log">SYSTEM STARTING...</div>
-    <div id="app-root" style="width:100vw; height:100vh;"></div>
+    <div id="status">INITIATING MULTI-PATH BOOT...</div>
+    <div id="app-root"></div>
+
+    <script src="engine.js"></script>
 
     <script>
-        const log = document.getElementById('debug-log');
-        
-        // 1. Force the engine to load by creating a script tag manually
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/@webrcade/app-common@1.2.10/dist/index.min.js';
-        document.head.appendChild(script);
-
-        log.innerHTML += "<br>ENGINE REQUESTED...";
-
-        // 2. Check every second to see if it arrived
-        let count = 0;
-        const checker = setInterval(() => {
-            count++;
-            log.innerHTML = "SYSTEM STARTING...<br>ENGINE REQUESTED...<br>SEARCHING: " + count + "/10";
-
-            if (typeof WebRcadePlayer !== 'undefined') {
-                clearInterval(checker);
-                log.innerHTML = "SUCCESS: ENGINE FOUND. BOOTING FEED...";
-                log.style.color = "yellow";
-                
-                try {
-                    const player = new WebRcadePlayer("app-root");
-                    player.loadFeed("feed.json");
-                    setTimeout(() => { log.style.display = 'none'; }, 5000);
-                } catch (e) {
-                    log.innerHTML = "FEED ERROR: " + e.message;
-                }
+        let attempts = 0;
+        const check = setInterval(() => {
+            attempts++;
+            if (window.engineLoaded && typeof WebRcadePlayer !== 'undefined') {
+                clearInterval(check);
+                document.getElementById('status').innerHTML = "ENGINE SECURED. LOADING FEED...";
+                const player = new WebRcadePlayer("app-root");
+                player.loadFeed("feed.json");
+                setTimeout(() => { document.getElementById('status').style.display='none'; }, 3000);
             }
-
-            if (count >= 10) {
-                clearInterval(checker);
-                log.innerHTML = "FATAL ERROR: ENGINE BLOCKED BY FILTER.<br>USE THE GOOGLE DOC SMUGGLE METHOD.";
-                log.style.color = "red";
+            if (attempts > 15) {
+                clearInterval(check);
+                document.getElementById('status').innerHTML = "CRITICAL FAILURE: ALL EXTERNAL PATHS BLOCKED.<br>YOUR SCHOOL HAS BLACKLISTED ALL KNOWN CDN SERVERS.";
+                document.getElementById('status').style.color = "red";
             }
         }, 1000);
     </script>
