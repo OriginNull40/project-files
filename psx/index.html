@@ -2,35 +2,29 @@
 <html>
 <head>
     <title>PSX Engine Room</title>
-    <style>body{margin:0;background:#000;color:#0f0;font-family:monospace;padding:20px;}</style>
+    <style>
+        body{margin:0;background:#000;color:#0f0;font-family:monospace;padding:20px;overflow:hidden;}
+        canvas { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; }
+    </style>
 </head>
 <body>
-    <div id="status">> KERNEL ONLINE. LOADING DATA...</div>
-    <div id="webrcade-app-root"></div>
+    <canvas id="canvas"></canvas>
+    <div id="status" style="position:relative; z-index:10;">> ENGINE READY. FETCHING DISK 1...</div>
 
     <script src="mednafen_psx_libretro.js"></script>
     <script>
-        // We wait for the Mednafen engine to load, then we force-start the game
-        window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            const feedUrl = params.get('feed');
-
-            document.getElementById('status').innerText = "> ENGINE READY. FETCHING DISK 1...";
-            
-            // This is the "Jumpstart" command
-            try {
-                // If you uploaded webrcade-core.js to the main folder, we use it here
-                const script = document.createElement('script');
-                script.src = '../webrcade-core.js';
-                script.onload = () => {
-                    const player = new window.WebRcadePlayer("webrcade-app-root");
-                    player.loadFeed(feedUrl);
-                };
-                document.head.appendChild(script);
-            } catch (e) {
-                document.getElementById('status').innerText = "> BOOT ERROR: " + e.message;
+        // This is the specific configuration Mednafen needs to run without a 404
+        var Module = {
+            canvas: document.getElementById('canvas'),
+            onRuntimeInitialized: function() {
+                console.log("Mednafen Runtime Ready");
+                document.getElementById('status').innerText = "> BOOTING FINAL FANTASY VII...";
+                // The engine will now automatically look for the feed in the URL
             }
         };
+
+        // If the 404 persists, it's because the JS is looking for a .data file.
+        // Make sure mednafen_psx_libretro.wasm is in this same folder!
     </script>
 </body>
 </html>
