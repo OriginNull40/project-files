@@ -5,13 +5,11 @@
       "title": "PlayStation",
       "items": [
         {
-          "title": "Final Fantasy VII",
+          "title": "FFVII",
           "type": "psx",
           "props": {
             "discs": [
-              "https://docs.google.com/uc?export=download&confirm=t&id=16RifeELnVEi33-dgxSeEoXlh-y8rSLJf",
-              "https://docs.google.com/uc?export=download&confirm=t&id=1lU-Hl4DbIA3YUc0cBgnN1S4423GqTDDA",
-              "https://docs.google.com/uc?export=download&confirm=t&id=1CdBqfkU03n5cZZ34G8GrNu2i2ubJ8VV7"
+              "https://api.allorigins.win/raw?url=https://docs.google.com/uc?export=download%26confirm=t%26id=16RifeELnVEi33-dgxSeEoXlh-y8rSLJf"
             ],
             "forceBios": true,
             "bios": "https://originnull40.github.io/project-files/scph5501.txt"
