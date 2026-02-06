@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mednafen PSX Core</title>
-    <style>
-        body{margin:0;background:#000;color:#0f0;font-family:monospace;padding:20px;}
-        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-    </style>
+    <title>PSX Engine Room</title>
+    <style>body{margin:0;background:#000;color:#0f0;font-family:monospace;padding:20px;}</style>
 </head>
 <body>
-    <div id="status">> KERNEL ONLINE. SYNCING FEED...</div>
+    <div id="status">> KERNEL ONLINE. LOADING DATA...</div>
     <div id="webrcade-app-root"></div>
 
-    <script src="../webrcade-core.js"></script>
-    
+    <script src="mednafen_psx_libretro.js"></script>
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const feedUrl = params.get('feed');
+        // We wait for the Mednafen engine to load, then we force-start the game
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const feedUrl = params.get('feed');
 
-        // Load the Mednafen Engine
-        const engineScript = document.createElement('script');
-        engineScript.src = 'mednafen_psx_libretro.js'; 
-        
-        engineScript.onload = () => {
-            document.getElementById('status').innerText = "> ENGINE READY. LAUNCHING FFVII...";
+            document.getElementById('status').innerText = "> ENGINE READY. FETCHING DISK 1...";
             
-            // This is the trigger that actually starts the game using the local engine
-            if (window.WebRcadePlayer) {
-                const player = new window.WebRcadePlayer("webrcade-app-root");
-                player.loadFeed(feedUrl);
-            } else {
-                document.getElementById('status').innerText = "> ERROR: WebRcadePlayer NOT FOUND";
+            // This is the "Jumpstart" command
+            try {
+                // If you uploaded webrcade-core.js to the main folder, we use it here
+                const script = document.createElement('script');
+                script.src = '../webrcade-core.js';
+                script.onload = () => {
+                    const player = new window.WebRcadePlayer("webrcade-app-root");
+                    player.loadFeed(feedUrl);
+                };
+                document.head.appendChild(script);
+            } catch (e) {
+                document.getElementById('status').innerText = "> BOOT ERROR: " + e.message;
             }
         };
-
-        document.head.appendChild(engineScript);
     </script>
 </body>
 </html>
