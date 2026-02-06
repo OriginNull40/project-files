@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Media Hub</title>
-    <style>body { margin: 0; background: #000; overflow: hidden; }</style>
+    <style>body { margin: 0; background: #000; }</style>
 </head>
 <body>
-    <div id="player-target"></div>
-    <script src="../webrcade-core.js"></script>
+    <div id="target"></div>
+    <script src="../player-core.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
         const feed = params.get('feed');
-        if (feed) {
-            const player = new window.WebRcadePlayer("player-target");
-            player.loadFeed(feed);
-        }
+        const player = new window.WebRcadePlayer("target");
+        player.loadFeed(feed);
     </script>
 </body>
 </html>
