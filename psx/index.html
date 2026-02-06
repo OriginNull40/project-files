@@ -2,33 +2,38 @@
 <html>
 <head>
     <title>Mednafen PSX Core</title>
-    <style>body{margin:0;background:#000;color:#0f0;font-family:monospace;padding:20px;}</style>
+    <style>
+        body{margin:0;background:#000;color:#0f0;font-family:monospace;padding:20px;}
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    </style>
 </head>
 <body>
-    <div id="status">> MOUNTING MEDNAFEN KERNEL...</div>
+    <div id="status">> KERNEL ONLINE. SYNCING FEED...</div>
     <div id="webrcade-app-root"></div>
 
+    <script src="../webrcade-core.js"></script>
+    
     <script>
         const params = new URLSearchParams(window.location.search);
-        const feed = params.get('feed');
+        const feedUrl = params.get('feed');
 
-        // This loads the Mednafen JS you found
-        const script = document.createElement('script');
-        script.src = 'mednafen_psx_libretro.js'; 
+        // Load the Mednafen Engine
+        const engineScript = document.createElement('script');
+        engineScript.src = 'mednafen_psx_libretro.js'; 
         
-        script.onload = () => {
-            document.getElementById('status').innerText = "> KERNEL ONLINE. SYNCING FEED...";
-            // This is the part where the engine looks for the .wasm file automatically
-            console.log("Mednafen core initialized.");
+        engineScript.onload = () => {
+            document.getElementById('status').innerText = "> ENGINE READY. LAUNCHING FFVII...";
             
-            // Note: The engine expects the .wasm to be in the same folder.
+            // This is the trigger that actually starts the game using the local engine
+            if (window.WebRcadePlayer) {
+                const player = new window.WebRcadePlayer("webrcade-app-root");
+                player.loadFeed(feedUrl);
+            } else {
+                document.getElementById('status').innerText = "> ERROR: WebRcadePlayer NOT FOUND";
+            }
         };
 
-        script.onerror = () => {
-            document.getElementById('status').innerText = "> ERROR: mednafen_psx_libretro.js NOT FOUND";
-        };
-
-        document.head.appendChild(script);
+        document.head.appendChild(engineScript);
     </script>
 </body>
 </html>
