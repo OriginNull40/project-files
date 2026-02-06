@@ -1,52 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Internal Core</title>
-    <style>
-        body { margin: 0; background: #000; color: #0f0; font-family: monospace; overflow: hidden; }
-        #status { padding: 20px; font-size: 1.2em; }
-        #app-root { width: 100vw; height: 100vh; }
-    </style>
+    <title>Media Hub</title>
+    <style>body { margin: 0; background: #000; overflow: hidden; }</style>
 </head>
 <body>
-    <div id="status">INITIALIZING PSX KERNEL...</div>
-    <div id="app-root"></div>
-
+    <div id="player-target"></div>
+    <script src="../webrcade-core.js"></script>
     <script>
-        // This is the "Manual Handshake"
-        window.onload = async () => {
-            const status = document.getElementById('status');
-            const params = new URLSearchParams(window.location.search);
-            const feedUrl = params.get('feed');
-
-            status.innerText = "LINKING TO FEED: " + feedUrl;
-
-            // We are going to try to load the webrcade-core.js that 
-            // you already have in your main folder.
-            const script = document.createElement('script');
-            script.src = '../webrcade-core.js'; 
-            
-            script.onload = () => {
-                status.innerText = "CORE ATTACHED. ATTEMPTING BOOT...";
-                try {
-                    // Check if the Player class exists
-                    if (window.WebRcadePlayer) {
-                        const player = new window.WebRcadePlayer("app-root");
-                        player.loadFeed(feedUrl);
-                    } else {
-                        status.innerText = "ERROR: PLAYER CLASS NOT FOUND IN CORE.JS";
-                    }
-                } catch (e) {
-                    status.innerText = "CRITICAL BOOT ERROR: " + e.message;
-                }
-            };
-
-            script.onerror = () => {
-                status.innerText = "ERROR: COULD NOT REACH WEBRCADE-CORE.JS";
-            };
-
-            document.head.appendChild(script);
-        };
+        const params = new URLSearchParams(window.location.search);
+        const feed = params.get('feed');
+        if (feed) {
+            const player = new window.WebRcadePlayer("player-target");
+            player.loadFeed(feed);
+        }
     </script>
 </body>
 </html>
