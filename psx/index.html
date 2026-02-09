@@ -1,28 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>PSX Brute Force</title>
-    <style>body{margin:0;background:#000;color:#0f0;font-family:monospace;}canvas{width:100vw;height:100vh;}</style>
-</head>
-<body>
-    <div id="status">INITIATING DIRECT BOOT...</div>
-    <canvas id="canvas" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
-    <script>
-        var statusElement = document.getElementById('status');
-        var Module = {
-            canvas: document.getElementById('canvas'),
-            arguments: ["-bios", "scph5501.bin", "game.chd"],
-            preRun: [function() {
-                statusElement.innerHTML = "DOWNLOADING BIOS AND GAME (STAY ON THIS PAGE)...";
-                // This forces the emulator to grab the files directly
-                Module.FS_createPreloadedFile("/", "scph5501.bin", "https://originnull40.github.io/project-files/scph5501.bin", true, false);
-                Module.FS_createPreloadedFile("/", "game.chd", "https://github.com/OriginNull40/project-files/releases/download/v1.0/Final.Fantasy.VII.Disc.1.chd", true, false);
-            }],
-            postRun: [function() {
-                statusElement.style.display = 'none';
-            }]
-        };
-    </script>
-    <script async src="mednafen_psx_libretro.js"></script>
-</body>
-</html>
+<script>
+    var statusElement = document.getElementById('status');
+    var Module = {
+        canvas: document.getElementById('canvas'),
+        // We simplified the arguments to just the game file
+        arguments: ["game.chd"],
+        preRun: [function() {
+            statusElement.innerHTML = "DOWNLOADING ASSETS... PLEASE WAIT";
+            // Map the BIOS and Game into the emulator's memory
+            Module.FS_createPreloadedFile("/", "scph5501.bin", "https://originnull40.github.io/project-files/scph5501.bin", true, false);
+            Module.FS_createPreloadedFile("/", "game.chd", "https://github.com/OriginNull40/project-files/releases/download/v1.0/Final.Fantasy.VII.Disc.1.chd", true, false);
+        }],
+        postRun: [function() {
+            // This hides the loading text automatically once it's ready
+            statusElement.style.display = 'none';
+        }]
+    };
+</script>
