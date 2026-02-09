@@ -11,7 +11,7 @@
         var statusElement = document.getElementById('status');
         var Module = {
             canvas: document.getElementById('canvas'),
-            arguments: ["-bios", "scph5501.bin", "game.chd"],
+            arguments: ["game.chd"],
             preRun: [function() {
                 statusElement.innerHTML = "DOWNLOADING BIOS AND GAME (STAY ON THIS PAGE)...";
                 // This forces the emulator to grab the files directly
