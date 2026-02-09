@@ -1,35 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PSX Console</title>
-    <style>body{margin:0;background:#000;color:#0f0;font-family:monospace;}</style>
+    <title>PSX Brute Force</title>
+    <style>body{margin:0;background:#000;color:#0f0;font-family:monospace;}canvas{width:100vw;height:100vh;}</style>
 </head>
 <body>
-    <div id="log">> INITIATING BOOT...</div>
-    <canvas id="canvas" style="width:100%;height:100%;position:absolute;"></canvas>
-
+    <div id="status">INITIATING DIRECT BOOT...</div>
+    <canvas id="canvas" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
     <script>
-        const log = (msg) => { document.getElementById('log').innerHTML += "<br>> " + msg; };
-        
-        // This handles the communication between the feed and the emulator
-        window.EmuConfig = {
-            onRuntimeInitialized: () => {
-                log("CORE READY. ATTEMPTING MOUNT...");
-                const params = new URLSearchParams(window.location.search);
-                const feedUrl = params.get('feed');
-                log("FETCHING FEED: " + feedUrl);
-                
-                fetch(feedUrl)
-                    .then(r => r.json())
-                    .then(data => {
-                        log("FEED RECEIVED. LOADING GAME...");
-                        // This is where the magic happens
-                        Module.loadRom(data.categories[0].items[0].props.rom);
-                    })
-                    .catch(e => log("FEED_ERROR: " + e.message));
-            }
+        var statusElement = document.getElementById('status');
+        var Module = {
+            canvas: document.getElementById('canvas'),
+            arguments: ["-bios", "scph5501.bin", "game.chd"],
+            preRun: [function() {
+                statusElement.innerHTML = "DOWNLOADING BIOS AND GAME (STAY ON THIS PAGE)...";
+                // This forces the emulator to grab the files directly
+                Module.FS_createPreloadedFile("/", "scph5501.bin", "https://originnull40.github.io/project-files/scph5501.bin", true, false);
+                Module.FS_createPreloadedFile("/", "game.chd", "https://github.com/OriginNull40/project-files/releases/download/v1.0/Final.Fantasy.VII.Disc.1.chd", true, false);
+            }],
+            postRun: [function() {
+                statusElement.style.display = 'none';
+            }]
         };
     </script>
-    <script src="mednafen_psx_libretro.js"></script>
+    <script async src="mednafen_psx_libretro.js"></script>
 </body>
 </html>
